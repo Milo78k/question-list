@@ -59,3 +59,13 @@ export const getQuestionBySlug = async (slug: string): Promise<Question> => {
 
   return response.json();
 };
+
+export const getQuestionById = async (id: number): Promise<Question> => {
+  const response = await fetch(`${BASE_URL}/questions/public-questions/${id}`);
+
+  if (!response.ok) {
+    throw new Error(`Ошибка ${response.status}: не удалось загрузить вопрос`);
+  }
+
+  return response.json();
+};

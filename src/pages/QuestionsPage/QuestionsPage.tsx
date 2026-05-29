@@ -1,8 +1,5 @@
-import { Pagination } from "../../components/Pagination/Pagination";
-import { QuestionList } from "../../components/QuestionList/QuestionList";
-import { SidebarFilters } from "../../components/SidebarFilters/SidebarFilters";
-import filterIcon from "../../assets/icons/Filter-button.svg";
-import closeIcon from "../../assets/icons/Close-button.svg";
+import { QuestionsContent } from "../../components/QuestionsContent/QuestionsContent";
+import { QuestionsFiltersAside } from "../../components/QuestionsFiltersAside/QuestionsFiltersAside";
 import { useQuestionsPage } from "../../hooks/useQuestionsPage";
 import "./QuestionsPage.scss";
 
@@ -23,51 +20,22 @@ export const QuestionsPage = () => {
   return (
     <section className="questions-page">
       <div className="questions-page__container">
-        <div className="questions-page__content">
-          <div className="questions-page__header">
-            <h1 className="questions-page__title">Вопросы React, JavaScript</h1>
+        <QuestionsContent
+          questionsData={questionsData}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          onOpenFilters={() => setIsFiltersOpen(true)}
+        />
 
-            <button
-              type="button"
-              className="questions-page__filter-button"
-              onClick={() => setIsFiltersOpen(true)}
-            >
-              <img src={filterIcon} alt="Filter icon" />
-            </button>
-          </div>
-
-          {isLoading && <p>Загрузка...</p>}
-
-          {errorMessage && <p>{errorMessage}</p>}
-
-          {!isLoading && !errorMessage && questionsData && (
-            <>
-              <QuestionList questions={questionsData.data} />
-
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            </>
-          )}
-        </div>
-
-        <aside
-          className={`questions-page__sidebar ${
-            isFiltersOpen ? "questions-page__sidebar--open" : ""
-          }`}
-        >
-          <button
-            type="button"
-            className="questions-page__sidebar-close"
-            onClick={() => setIsFiltersOpen(false)}
-          >
-            <img src={closeIcon} alt="Close icon" />
-          </button>
-
-          <SidebarFilters filters={filters} onChange={changeFilters} />
-        </aside>
+        <QuestionsFiltersAside
+          isOpen={isFiltersOpen}
+          filters={filters}
+          onClose={() => setIsFiltersOpen(false)}
+          onChange={changeFilters}
+        />
       </div>
     </section>
   );

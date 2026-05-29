@@ -11,6 +11,7 @@ import { QuestionCardHeader } from "./ QuestionCardHeader";
 import { QuestionCardMeta } from "./QuestionCardMeta";
 
 import "./QuestionCard.scss";
+import { Loader } from "../Loader/Loader";
 
 type QuestionCardProps = {
   question: Question;
@@ -87,9 +88,7 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
           complexity={question.complexity}
         />
 
-        {isLoadingDetails && (
-          <p className="question-card__loading">Загрузка...</p>
-        )}
+        {isLoadingDetails && <Loader />}
 
         {!isLoadingDetails && questionDetails?.shortAnswer && (
           <HtmlContent

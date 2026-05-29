@@ -1,42 +1,87 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getPublicQuestions } from "../api/questionsApi";
 import type { QuestionResponse } from "../types/question";
 import type { QuestionFilters } from "../types/questionFilters";
+import { updateSearchParams } from "../utils/updateSearchParams";
 import { useDebounce } from "./useDebounce";
 
 const LIMIT = 10;
 
+const getNumberArrayFromParams = (value: string): number[] => {
+  if (!value) return [];
+
+  return value.split(",").map(Number).filter(Boolean);
+};
+
+const getStringArrayFromParams = (value: string): string[] => {
+  if (!value) return [];
+
+  return value.split(",").filter(Boolean);
+};
+
 export const useQuestionsPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [questionsData, setQuestionsData] = useState<QuestionResponse | null>(
     null,
   );
-
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [filters, setFilters] = useState<QuestionFilters>({
-    search: "",
-    specializationSlug: "",
-    skills: [],
-    complexity: [],
-    rate: [],
-    status: "Все",
-  });
+  const currentPage = Number(searchParams.get("page") || 1);
 
-  const debouncedSearch = useDebounce(filters.search, 400);
+  const search = searchParams.get("search") || "";
+  const specializationSlug = searchParams.get("specializationSlug") || "";
+  const skillsParam = searchParams.get("skills") || "";
+  const complexityParam = searchParams.get("complexity") || "";
+  const rateParam = searchParams.get("rate") || "";
+  const status = searchParams.get("status") || "Все";
+
+  const filters: QuestionFilters = useMemo(
+    () => ({
+      search,
+      specializationSlug,
+      skills: getNumberArrayFromParams(skillsParam),
+      complexity: getStringArrayFromParams(complexityParam),
+      rate: getNumberArrayFromParams(rateParam),
+      status,
+    }),
+    [
+      search,
+      specializationSlug,
+      skillsParam,
+      complexityParam,
+      rateParam,
+      status,
+    ],
+  );
+
+  const debouncedSearch = useDebounce(search, 400);
 
   const changeFilters = <K extends keyof QuestionFilters>(
     key: K,
     value: QuestionFilters[K],
   ) => {
-    setCurrentPage(1);
+    setSearchParams(
+      updateSearchParams({
+        filters: {
+          ...filters,
+          [key]: value,
+        },
+        page: 1,
+      }),
+    );
+  };
 
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+  const setCurrentPage = (page: number) => {
+    setSearchParams(
+      updateSearchParams({
+        filters,
+        page,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -50,11 +95,11 @@ export const useQuestionsPage = () => {
           limit: LIMIT,
           filters: {
             search: debouncedSearch,
-            specializationSlug: filters.specializationSlug,
-            skills: filters.skills,
-            complexity: filters.complexity,
-            rate: filters.rate,
-            status: filters.status,
+            specializationSlug,
+            skills: getNumberArrayFromParams(skillsParam),
+            complexity: getStringArrayFromParams(complexityParam),
+            rate: getNumberArrayFromParams(rateParam),
+            status,
           },
         });
 
@@ -71,11 +116,11 @@ export const useQuestionsPage = () => {
   }, [
     currentPage,
     debouncedSearch,
-    filters.specializationSlug,
-    filters.skills,
-    filters.complexity,
-    filters.rate,
-    filters.status,
+    specializationSlug,
+    skillsParam,
+    complexityParam,
+    rateParam,
+    status,
   ]);
 
   const totalPages = questionsData

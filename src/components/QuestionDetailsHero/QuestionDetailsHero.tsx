@@ -12,11 +12,13 @@ export const QuestionDetailsHero = ({
 }: QuestionDetailsHeroProps) => {
   return (
     <div className="question-details__hero-card">
-      <img
-        src={question.imageSrc ?? ""}
-        alt="Question illustration"
-        className="question-details__image"
-      />
+      {question.imageSrc && (
+        <img
+          src={question.imageSrc}
+          alt="Question illustration"
+          className="question-details__image"
+        />
+      )}
 
       <div className="question-details__wrapper">
         <div className="question-details__info">

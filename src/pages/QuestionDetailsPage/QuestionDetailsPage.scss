@@ -75,20 +75,16 @@
 
   &__hero-card {
     padding: 24px;
-
     display: flex;
     align-items: center;
     gap: 24px;
-
     margin-bottom: 20px;
   }
 
   &__image {
     width: 140px;
     height: 140px;
-
     flex-shrink: 0;
-
     border-radius: 12px;
     object-fit: cover;
   }
@@ -100,7 +96,6 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 20px;
-
     min-width: 0;
   }
 
@@ -110,17 +105,14 @@
 
   &__title {
     margin: 0 0 8px;
-
     font-size: 28px;
     font-weight: 500;
     line-height: 1.2;
-
     color: $color-text-primary;
   }
 
   &__subtitle {
     margin: 0;
-
     color: $color-text-secondary;
     font-size: 15px;
     line-height: 1.5;
@@ -129,16 +121,12 @@
   &__actions {
     width: 44px;
     height: 44px;
-
     flex-shrink: 0;
-
     display: none;
     align-items: center;
     justify-content: center;
-
     border: 1px solid $color-border-light;
     border-radius: 12px;
-
     background: $color-bg-card;
 
     img {
@@ -149,10 +137,8 @@
 
   &__navigation {
     height: 72px;
-
     margin-bottom: 20px;
     padding: 0 24px;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -188,7 +174,6 @@
 
   &__section-title {
     margin: 0 0 20px;
-
     font-size: 22px;
     font-weight: 500;
     color: $color-text-primary;
@@ -293,22 +278,15 @@
       top: 0;
       right: 0;
       z-index: 300;
-
       width: 360px;
       max-width: 85vw;
-
       height: auto;
       max-height: 100vh;
-
       padding: 86px 20px 24px;
-
       background: $color-bg-card;
-
       transform: translateX(100%);
       transition: transform 0.3s ease;
-
       overflow-y: auto;
-
       box-shadow: -8px 0 24px rgba(0, 0, 0, 0.16);
 
       &--open {
@@ -320,17 +298,11 @@
       position: absolute;
       top: 16px;
       right: 16px;
-
       width: 24px;
       height: 24px;
-
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    &__mentor-desktop {
-      display: none;
     }
 
     &__mentor-mobile {

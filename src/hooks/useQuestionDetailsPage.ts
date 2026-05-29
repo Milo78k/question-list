@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
 import { getQuestionBySlug } from "../api/questionsApi";
+
 import type { Question } from "../types/question";
 
 export const useQuestionDetailsPage = () => {
@@ -16,9 +18,7 @@ export const useQuestionDetailsPage = () => {
     const loadQuestion = async () => {
       try {
         setIsLoading(true);
-
         const data = await getQuestionBySlug(slug);
-
         setQuestion(data);
       } catch (error) {
         console.error(error);

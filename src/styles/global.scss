@@ -11,12 +11,11 @@ body {
 }
 
 #root {
-  min-height: 100vh;
+  min-height: 100%;
 }
 
 .app {
   min-height: 100vh;
-
   display: flex;
   flex-direction: column;
 
