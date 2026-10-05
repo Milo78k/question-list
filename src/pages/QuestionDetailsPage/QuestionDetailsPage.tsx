@@ -8,10 +8,11 @@ import "./QuestionDetailsPage.scss";
 export const QuestionDetailsPage = () => {
   const navigate = useNavigate();
 
-  const { question, isLoading, isSidebarOpen, setIsSidebarOpen } =
+  const { question, errorMessage, isLoading, isSidebarOpen, setIsSidebarOpen } =
     useQuestionDetailsPage();
 
   if (isLoading) return <Loader />;
+  if (errorMessage) return <p role="alert">{errorMessage}</p>;
   if (!question) return <p>Вопрос не найден</p>;
 
   return (

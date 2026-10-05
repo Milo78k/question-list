@@ -7,12 +7,14 @@ type GetPublicQuestionsParams = {
   page: number;
   limit: number;
   filters?: QuestionFilters;
+  signal?: AbortSignal;
 };
 
 export const getPublicQuestions = async ({
   page,
   limit,
   filters,
+  signal,
 }: GetPublicQuestionsParams): Promise<QuestionResponse> => {
   const params = new URLSearchParams();
 
@@ -41,6 +43,7 @@ export const getPublicQuestions = async ({
 
   const response = await fetch(
     `${BASE_URL}/questions/public-questions?${params.toString()}`,
+    { signal },
   );
 
   if (!response.ok) {
@@ -50,8 +53,8 @@ export const getPublicQuestions = async ({
   return response.json();
 };
 
-export const getQuestionBySlug = async (slug: string): Promise<Question> => {
-  const response = await fetch(`${BASE_URL}/questions/by-slug/${slug}`);
+export const getQuestionBySlug = async (slug: string, signal?: AbortSignal): Promise<Question> => {
+  const response = await fetch(`${BASE_URL}/questions/by-slug/${encodeURIComponent(slug)}`, { signal });
 
   if (!response.ok) {
     throw new Error(`Ошибка ${response.status}: не удалось загрузить вопрос`);
