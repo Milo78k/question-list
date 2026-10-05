@@ -37,7 +37,6 @@ export const useQuestionsPage = () => {
   const skillsParam = searchParams.get("skills") || "";
   const complexityParam = searchParams.get("complexity") || "";
   const rateParam = searchParams.get("rate") || "";
-  const status = searchParams.get("status") || "Все";
 
   const filters: QuestionFilters = useMemo(
     () => ({
@@ -46,7 +45,6 @@ export const useQuestionsPage = () => {
       skills: getNumberArrayFromParams(skillsParam),
       complexity: getStringArrayFromParams(complexityParam),
       rate: getNumberArrayFromParams(rateParam),
-      status,
     }),
     [
       search,
@@ -54,7 +52,6 @@ export const useQuestionsPage = () => {
       skillsParam,
       complexityParam,
       rateParam,
-      status,
     ],
   );
 
@@ -85,6 +82,7 @@ export const useQuestionsPage = () => {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
     const loadQuestions = async () => {
       try {
         setIsLoading(true);
@@ -93,26 +91,28 @@ export const useQuestionsPage = () => {
         const data = await getPublicQuestions({
           page: currentPage,
           limit: LIMIT,
+          signal: controller.signal,
           filters: {
             search: debouncedSearch,
             specializationSlug,
             skills: getNumberArrayFromParams(skillsParam),
             complexity: getStringArrayFromParams(complexityParam),
             rate: getNumberArrayFromParams(rateParam),
-            status,
           },
         });
 
-        setQuestionsData(data);
+        if (!controller.signal.aborted) setQuestionsData(data);
       } catch (error) {
+        if (controller.signal.aborted) return;
         console.error(error);
         setErrorMessage("Не удалось загрузить вопросы");
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     };
 
     loadQuestions();
+    return () => controller.abort();
   }, [
     currentPage,
     debouncedSearch,
@@ -120,7 +120,6 @@ export const useQuestionsPage = () => {
     skillsParam,
     complexityParam,
     rateParam,
-    status,
   ]);
 
   const totalPages = questionsData
